@@ -1,0 +1,4 @@
+# Required Libraries
+- pyautogui (For keyboard and mouse operations.)
+- pytz (For Timer Operations.)
+- pandas (For reading data from Excel.)
