@@ -1,5 +1,4 @@
-# PyAutoWhatsappWeb
- Send multiple or single whatsapp messages at a specific time.
+![PyAutoWhatsappWeb Banner](/Images/banner.png)
 
 ## Authors
 * Metin Ilgar Mutlu
