@@ -1,7 +1,7 @@
 import pyautogui as pg
 import webbrowser as web
 import pandas as pd
-
+import quopri
 import pytz
 from pytz import timezone
 from time import sleep
@@ -79,3 +79,41 @@ def sendMultipleMessage(path, message):
 		
 		sendMessage(phoneNumber, message, internationalTelephoneCodes)
 	
+def vcfReader(path, fileName):
+	contacts = {}
+	with open(path, "r") as f:
+		numPerson = 0
+
+		while True:
+			numPerson = 1 + numPerson
+			contacts[numPerson] = {}
+			while True:
+				i = f.readline()
+				
+				if "FN" in i:
+					_ ,val= i.split(":")
+					key = "Name"
+					val = val.replace("\n", "")
+
+					if "=" in val: val = quopri.decodestring(val).decode('utf-8')
+
+					contacts[numPerson][key] = val
+
+				elif "TEL" in i:
+					_ ,val= i.split(":")
+					key = "Phone Number"
+
+					val = val.replace("\n", "")
+					val = val.replace("+", "")
+					val = val.replace("-", "")
+
+					contacts[numPerson][key] = val
+					contacts[numPerson]["Country Phone Codes"] = ""
+					break
+
+				elif i == "":
+					contacts.pop(numPerson)
+					contacts_df = pd.DataFrame(contacts).T
+
+					contacts_df.to_excel(fileName, index = False)
+					return contacts_df
