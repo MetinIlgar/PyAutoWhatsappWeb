@@ -46,7 +46,6 @@ def differentCountryTimer():
 	while True:
 		# Current time in UTC
 		now_utc = datetime.now(timezone('UTC'))
-		#print(now_utc.strftime(format))
 
 		# Convert to x time zone
 		now_x = (now_utc.astimezone(timezone(tz_dic[tz_val]))).strftime(format)
@@ -62,4 +61,21 @@ def sendMessage(phoneNumber, message, internationalTelephoneCodes = "90"):
 	pg.press('enter')
 
 	windowClose()
+
+def readPhoneNumber(path):
+	phoneInfo = pd.read_excel(path)
+	return phoneInfo
+
+def sendMultipleMessage(path, message):
+
+	phoneInfo=readPhoneNumber(path)
+
+	for i in range(0, int(phoneInfo.size/3)):
+		phone_data = phoneInfo.loc[i]
+
+		name = phone_data["Name"]
+		phoneNumber = phone_data["Phone Number"]
+		internationalTelephoneCodes = 90 if phone_data["Country Phone Codes"] !=  phone_data["Country Phone Codes"] else int(phone_data["Country Phone Codes"])
+		
+		sendMessage(phoneNumber, message, internationalTelephoneCodes)
 	
