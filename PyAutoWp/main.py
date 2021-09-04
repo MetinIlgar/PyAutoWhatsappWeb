@@ -7,12 +7,7 @@ from pytz import timezone
 from time import sleep
 from datetime import datetime
 import phonenumbers
-
-def windowCheck():
-	web.open("https://web.whatsapp.com/")
-	pg.alert("Login to whatsapp web from your default browser and make the window full screen." + 
-		"\nDon't forget to check the Keep me signed in option."+ 
-		"\n(You can close the window after making it full screen.)")
+from phonenumbers import timezone as tiz
 
 def windowOpen(link,sleepTime = 8):
 	web.open(link)
@@ -29,12 +24,17 @@ def windowClose():
 	pg.hotkey("ctrl", "w")
 
 def differentCountryTimer():
-	t = input("Enter the date and time to send the message (example: day.month.year 21:00): ")
 	try : 
 		phoneNumber = phonenumbers.parse(phoneNumber)
-		time_Zone = phonenumbers.timezone.time_zones_for_number(phoneNumber) # return tuple
-		live_in = input(f"Does the owner of the phone number live in {time_Zone}? (Y,N)")
-		if live_in == "y" or live_in == "Y":
+		time_Zone = tiz.time_zones_for_number(phoneNumber)
+		if len(time_Zone) != 1:
+			x = 1
+			for i in time_Zone:
+				print(f"{x}{i}")
+				x = x + 1
+			live_in = int(input("Please enter the location number to which you will send the message (example: 1, 2 etc.): ")) - 1
+			return str(time_Zone[live_in])		
+		else:
 			return str(time_Zone[0])
 
 	except:
@@ -53,7 +53,7 @@ def differentCountryTimer():
 
 def timer(tz):
 	format = "%d-%m-%Y %H:%M"
-	 
+	t = input("Enter the date and time to send the message (example: day.month.year 21:00): ")
 	while True:
 		# Current time in UTC
 		now_utc = datetime.now(timezone('UTC'))
@@ -66,7 +66,7 @@ def timer(tz):
 		if now_x == later_x:
 			return True		
 
-def sendMessage(phoneNumber, message, internationalTelephoneCodes = "90"):
+def sendMessage(phoneNumber, message):
 	windowOpen(f"https://web.whatsapp.com/send?phone={internationalTelephoneCodes}{phoneNumber}&text={message}")
 	
 	pg.press('enter')
@@ -77,18 +77,15 @@ def readPhoneNumber(path):
 	phoneInfo = pd.read_excel(path)
 	return phoneInfo
 
-def sendMultipleMessage(path, message):
+def sendMultipleMessage(PhoneNumberData, message):
 
-	phoneInfo=readPhoneNumber(path)
-
-	for i in range(0, int(phoneInfo.size/3)):
-		phone_data = phoneInfo.loc[i]
+	for i in range(0, int(PhoneNumberData.size/3)):
+		phone_data = PhoneNumberData.loc[i]
 
 		name = phone_data["Name"]
 		phoneNumber = phone_data["Phone Number"]
-		internationalTelephoneCodes = 90 if phone_data["Country Phone Codes"] !=  phone_data["Country Phone Codes"] else int(phone_data["Country Phone Codes"])
 		
-		sendMessage(phoneNumber, message, internationalTelephoneCodes)
+		sendMessage(phoneNumber, message)
 	
 def vcfReader(path, fileName):
 	contacts = {}
@@ -157,14 +154,14 @@ def contacts_df_edit(contacts_df):
 			print("_______________________________________________________________________")
 			x=input("Enter 1 if you want to assign collectively, \nenter 2 if you want to assign one by one, \nand 0 if you do not want to assign. \n(If you do not assign, your message will not be forwarded to those people.): ")
 			print("_______________________________________________________________________")
+			isnullList=contacts_df['Country Phone Codes'].isnull()
+			index_list = (isnullList[isnullList==True].index)
 			if x == "1":
 				cc = input("Enter the country code you want to bulk assign. (eg 90.):")
 				contacts_df['Country Phone Codes'].fillna(cc, inplace = True)
 				print("_______________________________________________________________________")
 
 			if x == "2":
-				isnullList=contacts_df['Country Phone Codes'].isnull()
-				index_list = (isnullList[isnullList==True].index)
 				for i in index_list:
 					print(contacts_df.loc[i]["Name"]+": "+contacts_df.loc[i]["Phone Number"])
 					n = input("Country Phone Codes for this contact: ")
@@ -172,5 +169,10 @@ def contacts_df_edit(contacts_df):
 					print("-------------------------------")
 			if x == "0":
 				contacts_df.dropna(inplace = True)
+	
+	for i in index_list:
+		  contacts_df.loc[i]["Phone Number"] = "+" + contacts_df.loc[i]["Country Phone Codes"] + contacts_df.loc[i]["Phone Number"]
+	
+	contacts_df.drop("Country Phone Codes", inplace=True, axis=1)
 
 	return contacts_df		
