@@ -23,7 +23,7 @@ def windowClose():
 	sleep(1)
 	pg.hotkey("ctrl", "w")
 
-def differentCountryTimer():
+def differentCountryTimer(phoneNumber):
 	try : 
 		phoneNumber = phonenumbers.parse(phoneNumber)
 		time_Zone = tiz.time_zones_for_number(phoneNumber)
@@ -49,11 +49,10 @@ def differentCountryTimer():
 
 		tz_val = int(input("Please enter the location number to which you will send the message (example: 1, 2, 3 etc.): "))
 
-		return tz_dic[tz_val]
+		return str(tz_dic[tz_val])
 
-def timer(tz):
+def timer(tz,t):
 	format = "%d-%m-%Y %H:%M"
-	t = input("Enter the date and time to send the message (example: day.month.year 21:00): ")
 	while True:
 		# Current time in UTC
 		now_utc = datetime.now(timezone('UTC'))
@@ -64,10 +63,10 @@ def timer(tz):
 		later_x = datetime.strptime(t,"%d.%m.%Y %H:%M").strftime(format)
 
 		if now_x == later_x:
-			return True		
+			break		
 
 def sendMessage(phoneNumber, message):
-	windowOpen(f"https://web.whatsapp.com/send?phone={internationalTelephoneCodes}{phoneNumber}&text={message}")
+	windowOpen(f"https://web.whatsapp.com/send?phone={phoneNumber}&text={message}")
 	
 	pg.press('enter')
 
@@ -79,7 +78,7 @@ def readPhoneNumber(path):
 
 def sendMultipleMessage(PhoneNumberData, message):
 
-	for i in range(0, int(PhoneNumberData.size/3)):
+	for i in PhoneNumberData.index:
 		phone_data = PhoneNumberData.loc[i]
 
 		name = phone_data["Name"]
