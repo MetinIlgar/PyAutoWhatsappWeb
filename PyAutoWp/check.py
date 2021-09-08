@@ -1,8 +1,8 @@
-import wp
+import main
 
 def windowCheck():
-	wp.web.open("https://web.whatsapp.com/")
-	wp.pg.alert("Login to whatsapp web from your default browser and make the window full screen." + 
+	main.web.open("https://web.whatsapp.com/")
+	main.pg.alert("Login to whatsapp web from your default browser and make the window full screen." + 
 		"\nDon't forget to check the Keep me signed in option."+ 
 		"\n(You can close the window after making it full screen.)")
 
@@ -10,26 +10,28 @@ def phoneNumberCheck():
 	while True:
 		while True:
 			try:
-				phoneNumber = input("Please enter the phone number you want to send (eg: +905123456789): ")
-				phone_number = wp.phonenumbers.parse(phoneNumber)
+				phoneNumber = main.wcb("Please enter the phone number you want to send.","(eg: +905123456789): ")
+				phone_number = main.phonenumbers.parse(phoneNumber)
 				break
 			except:
-				print("Please enter a valid phone number.")
+				print(main.Fore.WHITE + main.Back.RED + main.Style.BRIGHT + "Please enter a valid phone number.")
+				print(main.Style.RESET_ALL)
 
-
-		valid = wp.phonenumbers.is_valid_number(phone_number)
-		possible = wp.phonenumbers.is_possible_number(phone_number)
+		valid = main.phonenumbers.is_valid_number(phone_number)
+		possible = main.phonenumbers.is_possible_number(phone_number)
 
 		if valid == False or possible == False:
-	  		print("Please enter a valid phone number.")
+			print(main.Fore.WHITE + main.Back.RED + main.Style.BRIGHT + "Please enter a valid phone number.")
+			print(main.Style.RESET_ALL)		
 		else:
 	  		break
 	return  (str(phone_number.country_code) + str(phone_number.national_number))
 def messageCheck():
 	while True:
-		message = input("Please enter the message you want to send: ")
+		message = main.wcb("Please enter the message you want to send","Message: ")
 		if message == "":
-			print("Please enter a valid message.")
+			print(main.Fore.WHITE + main.Back.RED + main.Style.BRIGHT + "Please enter a valid phone message.")
+			print(main.Style.RESET_ALL)		
 		else:
 			break
 	return message
@@ -37,24 +39,24 @@ def messageCheck():
 
 def phoneListCheck():
 	while True:
-		a = input("Select option to import phone list:\n1-From Excel\n2-From vCard: ")
-		if a == "1":
-			n = input("Enter the file path:")
-			phoneNumberData = wp.readPhoneNumber(n)
-			break
-		elif a == "2":
-			n = input("Enter the file path:: ")
-			phoneNumberData = wp.vcfReader(n,"Phone_Number_Data.xlsx")
-			break
-		else:
-			print("Please select a valid option. 1 or 2")
+		a = main.wcbo("Select option to import phone list:\n1-From Excel\n2-From vCard", "1 or 2: ", ["1","2"])
+		try:
+			n = main.wcb("Enter the file path." , "Path: ")
+			if a == "1":
+				phoneNumberData = main.readPhoneNumber(n)
+				break
+			elif a == "2":
+				phoneNumberData = main.vcfReader(n,"Phone_Number_Data.xlsx")
+				break
+		except:
+			print(main.Fore.WHITE + main.Back.RED + main.Style.BRIGHT + "There is no such file in this path.")
+			print(main.Style.RESET_ALL)
 		
-
 	return phoneNumberData
 
 def timerCheck():
 	while True:
-		a = input("Do you want to use a timer? (Y/N):")
+		a = main.wcbo("Do you want to use a timer?,", "(Y/N): ", ["Y","y","N","n"])
 		if a == "y" or a == "Y":
 			return True
 			break
@@ -62,6 +64,3 @@ def timerCheck():
 		elif a == "n" or a == "N":
 			return False
 			break
-
-		else:
-			print("Please select a valid option. Y(es) or N(o)")

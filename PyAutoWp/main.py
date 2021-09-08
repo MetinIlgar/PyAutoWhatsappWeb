@@ -8,6 +8,8 @@ from time import sleep
 from datetime import datetime
 import phonenumbers
 from phonenumbers import timezone as tiz
+from colorama import Fore, Back, Style, init
+init()
 
 def windowOpen(link,sleepTime = 8):
 	web.open(link)
@@ -29,25 +31,29 @@ def differentCountryTimer(phoneNumber):
 		time_Zone = tiz.time_zones_for_number(phoneNumber)
 		if len(time_Zone) != 1:
 			x = 1
+			l = []
 			for i in time_Zone:
 				print(f"{x}{i}")
+				l.append(str(x))
 				x = x + 1
-			live_in = int(input("Please enter the location number to which you will send the message (example: 1, 2 etc.): ")) - 1
+			live_in = int(wcbo("Please enter the location number to which you will send the message.", "(example: 1, 2 etc.): ", l)) - 1
 			return str(time_Zone[live_in])		
 		else:
 			return str(time_Zone[0])
 
 	except:
-		tz = input("Country Abbreviations (example: tr, us etc.): ")
+		tz = wcb("Country Abbreviations", "(example: tr, us etc.): ")
 		tz_list = pytz.country_timezones[tz]
 		num = 1
+		nl = []
 		tz_dic = {}
 		for i in tz_list:
 			tz_dic[num] = i
 			print(str(num) + " - " + str(tz_dic[num]))
+			nl.append(str(num))
 			num = num+1
 
-		tz_val = int(input("Please enter the location number to which you will send the message (example: 1, 2, 3 etc.): "))
+		tz_val = int(wcbo("Please enter the location number to which you will send the message.", "(example: 1, 2, 3 etc.): ",nl))
 
 		return str(tz_dic[tz_val])
 
@@ -129,16 +135,14 @@ def vcfReader(path, fileName):
 
 def contacts_df_edit(contacts_df):
 	print(contacts_df)
-	k=input("Is there a phone number you want to remove from the list? (Y/N): ")
-	print("_______________________________________________________________________")
+	print()
+	k=wcbo("Is there a phone number you want to remove from the list?", "(Y/N): ", ["Y","y","N","n"])
 	if k == "Y" or k == "y":
-		delete_num=input("Write the sequence numbers of the phone numbers you want to remove from the list, separating them with commas (eg 1,2,3):")
-		print("_______________________________________________________________________")
+		delete_num=wcb("Write the sequence numbers of the phone numbers you want to remove from the list, separating them with commas.", "(eg 1,2,3): ")
 		delete_list=delete_num.split(",")
 		for m in delete_list:
 			print(contacts_df.loc[int(m)]["Name"]," has been deleted.")
 			contacts_df.drop(int(m), axis = 0, inplace = True)
-		print("_______________________________________________________________________")
 
 	if contacts_df.isnull().values.any() == True:
 		NANdata= contacts_df.isnull().sum()
@@ -150,22 +154,18 @@ def contacts_df_edit(contacts_df):
 
 		if NANdata["Country Phone Codes"] != 0:
 			print(f"There are {NANdata['Country Phone Codes']} missing country phone codes in the country phone codes list.")
-			print("_______________________________________________________________________")
-			x=input("Enter 1 if you want to assign collectively, \nenter 2 if you want to assign one by one, \nand 0 if you do not want to assign. \n(If you do not assign, your message will not be forwarded to those people.): ")
-			print("_______________________________________________________________________")
+			x=wcbo("Enter 1 if you want to assign collectively, \nenter 2 if you want to assign one by one, \nand 0 if you do not want to assign.","(If you do not assign, your message will not be forwarded to those people.): ", ["0","1","2"])
 			isnullList=contacts_df['Country Phone Codes'].isnull()
 			index_list = (isnullList[isnullList==True].index)
 			if x == "1":
-				cc = input("Enter the country code you want to bulk assign. (eg 90.):")
+				cc = wcb("Enter the country code you want to bulk assign.","(eg 90):")
 				contacts_df['Country Phone Codes'].fillna(cc, inplace = True)
-				print("_______________________________________________________________________")
 
 			if x == "2":
 				for i in index_list:
 					print(contacts_df.loc[i]["Name"]+": "+contacts_df.loc[i]["Phone Number"])
-					n = input("Country Phone Codes for this contact: ")
+					n = wcb("Country Phone Codes for this contact.","(eg 90): ")
 					contacts_df.loc[i]['Country Phone Codes'] = n
-					print("-------------------------------")
 			if x == "0":
 				contacts_df.dropna(inplace = True)
 	
@@ -174,4 +174,26 @@ def contacts_df_edit(contacts_df):
 	
 	contacts_df.drop("Country Phone Codes", inplace=True, axis=1)
 
-	return contacts_df		
+	return contacts_df
+
+def wcbo(text, end, options):
+
+	while True:
+		print(Fore.WHITE + Back.GREEN + Style.BRIGHT + text)
+		print(Fore.GREEN + Back.BLACK + Style.NORMAL, end = end)
+		x = input()
+		print(Style.RESET_ALL)
+		if x in options:
+			return x
+		else:
+			print(Fore.WHITE + Back.RED + Style.BRIGHT + f"Please select a valid option. {', '.join(options)}")
+			print(Style.RESET_ALL)
+
+def wcb(text, end):
+
+	print(Fore.WHITE + Back.GREEN + Style.BRIGHT + text)
+	print(Fore.GREEN + Back.BLACK + Style.NORMAL, end = end)
+	x = input()
+	print(Style.RESET_ALL)
+		
+	return x
