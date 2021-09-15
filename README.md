@@ -3,9 +3,9 @@
 ## Required Libraries.
 Type this command in the console to install the required libraries:
 
-'''
+```
 $ pip install -r requirements.txt
-'''
+```
 
 ## Import phone numbers.
 To send multiple messages, you need to import phone numbers. You can do this in 2 ways:
@@ -13,7 +13,7 @@ To send multiple messages, you need to import phone numbers. You can do this in 
 2. From the vCard file you imported from the sim card.
 
 You can edit the given excel file according to your own phone number as in the table example below.
-![PyAutoWhatsappWeb Banner](/Images/Sample_Phone_Number_Data_SS.png)
+![Sample Excel Spreadsheet](/Images/Sample_Phone_Number_Data_SS.PNG)
 ---
 Or, using a vCard with the ".vcf" file extension, convert your phone numbers to an excel file and import them in a format that the program can use.
 
