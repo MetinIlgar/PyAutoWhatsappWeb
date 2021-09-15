@@ -1,4 +1,17 @@
-# Required Libraries
-- pyautogui (For keyboard and mouse operations.)
-- pytz (For Timer Operations.)
-- pandas (For reading data from Excel.)
+certifi==2021.5.30
+colorama==0.4.4
+MouseInfo==0.1.3
+numpy==1.21.2
+pandas==1.3.3
+phonenumbers==8.12.31
+PyAutoGUI==0.9.53
+PyGetWindow==0.0.9
+PyMsgBox==1.0.9
+pyperclip==1.8.2
+PyRect==0.1.4
+PyScreeze==0.1.28
+python-dateutil==2.8.2
+pytweening==1.0.4
+pytz==2021.1
+six==1.16.0
+wincertstore==0.2

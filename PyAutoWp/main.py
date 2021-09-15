@@ -11,15 +11,15 @@ from phonenumbers import timezone as tiz
 from colorama import Fore, Back, Style, init
 init()
 
-def windowOpen(link,sleepTime = 8):
+def windowOpen(link,sleepTime = 10):
 	web.open(link)
-	sleep(4)
+	sleep(6)
 	
 	screenSize = pg.size()
 	width,height = screenSize[0]/2,screenSize[1]/2
 	pg.click(x=width, y=height, clicks=1, button='left')
 	
-	sleep(sleepTime-5)
+	sleep(sleepTime-7)
 
 def windowClose():
 	sleep(1)
@@ -32,8 +32,9 @@ def differentCountryTimer(phoneNumber):
 		if len(time_Zone) != 1:
 			x = 1
 			l = []
+			print(f"Where does +{phoneNumber.country_code} {phoneNumber.national_number} live?")
 			for i in time_Zone:
-				print(f"{x}{i}")
+				print(f"{x}-{i}")
 				l.append(str(x))
 				x = x + 1
 			live_in = int(wcbo("Please enter the location number to which you will send the message.", "(example: 1, 2 etc.): ", l)) - 1
@@ -156,7 +157,7 @@ def contacts_df_edit(contacts_df):
 			print(f"There are {NANdata['Country Phone Codes']} missing country phone codes in the country phone codes list.")
 			x=wcbo("Enter 1 if you want to assign collectively, \nenter 2 if you want to assign one by one, \nand 0 if you do not want to assign.","(If you do not assign, your message will not be forwarded to those people.): ", ["0","1","2"])
 			isnullList=contacts_df['Country Phone Codes'].isnull()
-			index_list = (isnullList[isnullList==True].index)
+			index_list = [isnullList[isnullList==True].index]
 			if x == "1":
 				cc = wcb("Enter the country code you want to bulk assign.","(eg 90):")
 				contacts_df['Country Phone Codes'].fillna(cc, inplace = True)
@@ -168,7 +169,8 @@ def contacts_df_edit(contacts_df):
 					contacts_df.loc[i]['Country Phone Codes'] = n
 			if x == "0":
 				contacts_df.dropna(inplace = True)
-	
+				index_list.clear()
+
 	for i in index_list:
 		  contacts_df.loc[i]["Phone Number"] = "+" + contacts_df.loc[i]["Country Phone Codes"] + contacts_df.loc[i]["Phone Number"]
 	
@@ -182,18 +184,19 @@ def wcbo(text, end, options):
 		print(Fore.WHITE + Back.GREEN + Style.BRIGHT + text)
 		print(Fore.GREEN + Back.BLACK + Style.NORMAL, end = end)
 		x = input()
-		print(Style.RESET_ALL)
+		print(Style.RESET_ALL, end = "")
 		if x in options:
 			return x
 		else:
 			print(Fore.WHITE + Back.RED + Style.BRIGHT + f"Please select a valid option. {', '.join(options)}")
-			print(Style.RESET_ALL)
+			print(Back.WHITE + "                                                                ")
+			print(Back.WHITE + "                                                                ")
 
 def wcb(text, end):
 
 	print(Fore.WHITE + Back.GREEN + Style.BRIGHT + text)
 	print(Fore.GREEN + Back.BLACK + Style.NORMAL, end = end)
 	x = input()
-	print(Style.RESET_ALL)
+	print(Style.RESET_ALL, end = "")
 		
 	return x

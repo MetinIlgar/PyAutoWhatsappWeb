@@ -12,7 +12,7 @@ while True:
 		message = check.messageCheck()
 		a = check.timerCheck()
 		if a == True:
-			t = main.wcbo("Enter the date and time to send the message", "(example: day.month.year 21:00): ", [".",":"])
+			t = main.wcb("Enter the date and time to send the message", "(example: day.month.year 21:00): ")
 			tz = list(map(main.differentCountryTimer,phoneNumberData["Phone Number"]))
 			phoneNumberData["tz"] = tz
 
@@ -57,5 +57,6 @@ while True:
 		message = check.messageCheck()
 		phoneNumber = check.phoneNumberCheck()
 		main.sendMessage(str(phoneNumber),message)
-		print("Message sent.")
 		break
+
+print("Message sent.")

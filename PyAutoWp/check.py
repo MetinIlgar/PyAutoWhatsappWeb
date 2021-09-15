@@ -22,7 +22,7 @@ def phoneNumberCheck():
 
 		if valid == False or possible == False:
 			print(main.Fore.WHITE + main.Back.RED + main.Style.BRIGHT + "Please enter a valid phone number.")
-			print(main.Style.RESET_ALL)		
+			print(main.Style.RESET_ALL)
 		else:
 	  		break
 	return  (str(phone_number.country_code) + str(phone_number.national_number))
@@ -31,7 +31,7 @@ def messageCheck():
 		message = main.wcb("Please enter the message you want to send","Message: ")
 		if message == "":
 			print(main.Fore.WHITE + main.Back.RED + main.Style.BRIGHT + "Please enter a valid phone message.")
-			print(main.Style.RESET_ALL)		
+			print(main.Style.RESET_ALL)
 		else:
 			break
 	return message
@@ -51,7 +51,7 @@ def phoneListCheck():
 		except:
 			print(main.Fore.WHITE + main.Back.RED + main.Style.BRIGHT + "There is no such file in this path.")
 			print(main.Style.RESET_ALL)
-		
+
 	return phoneNumberData
 
 def timerCheck():
