@@ -24,8 +24,8 @@ def phoneNumberCheck():
 			print(main.Fore.WHITE + main.Back.RED + main.Style.BRIGHT + "Please enter a valid phone number.")
 			print(main.Style.RESET_ALL)
 		else:
-	  		break
-	return  (str(phone_number.country_code) + str(phone_number.national_number))
+			break
+	return (str(phone_number.country_code) + str(phone_number.national_number))
 def messageCheck():
 	while True:
 		message = main.wcb("Please enter the message you want to send","Message: ")

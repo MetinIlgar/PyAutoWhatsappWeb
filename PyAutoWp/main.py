@@ -172,7 +172,7 @@ def contacts_df_edit(contacts_df):
 				index_list.clear()
 
 	for i in index_list:
-		  contacts_df.loc[i]["Phone Number"] = "+" + contacts_df.loc[i]["Country Phone Codes"] + contacts_df.loc[i]["Phone Number"]
+		contacts_df.loc[i]["Phone Number"] = "+" + contacts_df.loc[i]["Country Phone Codes"] + contacts_df.loc[i]["Phone Number"]
 	
 	contacts_df.drop("Country Phone Codes", inplace=True, axis=1)
 
